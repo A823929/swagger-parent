@@ -19,34 +19,54 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * swagger config
+ *
+ * @author Arno King
+ */
 @EnableSwagger2
 public class SwaggerConfig extends WebMvcConfigurationSupport {
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		super.addResourceHandlers(registry);
-		registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-		registry.addResourceHandler("/swagger/**").addResourceLocations("classpath:/swagger/");
-	}
+    /**
+     * registry the Configuration of swagger-ui to ResourceHandlerRegistry
+     *
+     * @param registry ResourceHandlerRegistry
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        super.addResourceHandlers(registry);
+        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+        registry.addResourceHandler("/swagger/**").addResourceLocations("classpath:/swagger/");
+    }
 
-	@Bean
-	public Docket docket() {
-		List<ResponseMessage> responseMessages = new ArrayList<ResponseMessage>();
-		responseMessages.add(new ResponseMessageBuilder().code(HttpServletResponse.SC_OK).message("操作成功").build());
-		responseMessages
-				.add(new ResponseMessageBuilder().code(HttpServletResponse.SC_NOT_FOUND).message("资源不存在").build());
-		responseMessages.add(new ResponseMessageBuilder().code(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
-				.message("服务器异常").build());
+    /**
+     * the swagger docket
+     *
+     * @return docket
+     */
+    @Bean
+    public Docket docket() {
+        List<ResponseMessage> responseMessages = new ArrayList<ResponseMessage>();
+        responseMessages.add(new ResponseMessageBuilder().code(HttpServletResponse.SC_OK).message("操作成功").build());
+        responseMessages
+                .add(new ResponseMessageBuilder().code(HttpServletResponse.SC_NOT_FOUND).message("资源不存在").build());
+        responseMessages.add(new ResponseMessageBuilder().code(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
+                .message("服务器异常").build());
 
-		return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).useDefaultResponseMessages(false)
-				.globalResponseMessage(RequestMethod.GET, responseMessages)
-				.globalResponseMessage(RequestMethod.POST, responseMessages)
-				.globalResponseMessage(RequestMethod.DELETE, responseMessages).select()
-				.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class)).paths(PathSelectors.any())
-				.build();
-	}
+        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).useDefaultResponseMessages(false)
+                .globalResponseMessage(RequestMethod.GET, responseMessages)
+                .globalResponseMessage(RequestMethod.POST, responseMessages)
+                .globalResponseMessage(RequestMethod.DELETE, responseMessages).select()
+                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class)).paths(PathSelectors.any())
+                .build();
+    }
 
-	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("在线API").version("1.0.0").description("在线API").build();
-	}
+    /**
+     * the base information of api
+     *
+     * @return apiInfo
+     */
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder().title("在线API").version("1.0.0").description("在线API").build();
+    }
 }

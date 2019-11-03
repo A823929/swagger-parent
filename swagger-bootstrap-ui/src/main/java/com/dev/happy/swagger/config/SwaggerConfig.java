@@ -18,9 +18,20 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * swagger config
+ *
+ * @author Arno King
+ */
 @EnableSwagger2
 @EnableSwaggerBootstrapUI
 public class SwaggerConfig extends WebMvcConfigurationSupport {
+    /**
+     * registry the Configuration of swagger-bootstrap-ui to ResourceHandlerRegistry
+     *
+     * @param registry ResourceHandlerRegistry
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         super.addResourceHandlers(registry);
@@ -28,13 +39,19 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
         registry.addResourceHandler("/swagger/**").addResourceLocations("classpath:/swagger/");
     }
+
+    /**
+     * the swagger docket
+     *
+     * @return docket
+     */
     @Bean
     public Docket docket() {
         List<ResponseMessage> responseMessages = new ArrayList();
-        responseMessages.add((new ResponseMessageBuilder()).code(200).message("操作成功").build());
-        responseMessages.add((new ResponseMessageBuilder()).code(404).message("资源不存在").build());
-        responseMessages.add((new ResponseMessageBuilder()).code(500).message("服务器异常").build());
-        Docket docket=new Docket(DocumentationType.SWAGGER_2);
+        responseMessages.add((new ResponseMessageBuilder()).code(200).message("success").build());
+        responseMessages.add((new ResponseMessageBuilder()).code(404).message("no resource").build());
+        responseMessages.add((new ResponseMessageBuilder()).code(500).message("server error").build());
+        Docket docket = new Docket(DocumentationType.SWAGGER_2);
         return docket.apiInfo(this.apiInfo())
                 .useDefaultResponseMessages(false)
                 .globalResponseMessage(RequestMethod.GET, responseMessages)
@@ -45,7 +62,12 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
                 .paths(PathSelectors.any()).build();
     }
 
+    /**
+     * the base information of api
+     *
+     * @return apiInfo
+     */
     private ApiInfo apiInfo() {
-        return (new ApiInfoBuilder()).title("在线API").version("1.0.0").description("在线API").build();
+        return (new ApiInfoBuilder()).title("Online API").version("1.0.0").description("Online API").build();
     }
 }
